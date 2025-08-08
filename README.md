@@ -4,7 +4,7 @@ A collection of interactive tools and explorers for healthcare domain modeling a
 
 ## 🌐 Live Site
 
-Visit the live site: [https://sand-aidan.github.io/sand-health-launch.github.io/](https://sand-aidan.github.io/sand-health-launch.github.io/)
+Visit the live site: [https://sand-aidan.github.io/sand-health-launch/](https://sand-aidan.github.io/sand-health-launch/)
 
 ## 🛠️ Available Tools
 
@@ -27,7 +27,7 @@ Visit the live site: [https://sand-aidan.github.io/sand-health-launch.github.io/
 ## 📁 Project Structure
 
 ```
-sand-health-launch.github.io/
+sand-health-launch/
 ├── index.html                              # Main landing page
 ├── healthcare-domain-model-explorer.html   # Healthcare domain model tool
 ├── hos-explorer.html                       # HOS explorer tool
