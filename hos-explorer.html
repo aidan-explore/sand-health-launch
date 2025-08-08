@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Operating System Explorer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            border-radius: 30px;
+            padding: 4px;
+            margin: 30px auto;
+            max-width: 600px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            height: 20px;
+            border-radius: 30px;
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .main-content {
+            display: none;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .main-content.active {
+            display: block;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            text-align: center;
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .welcome-screen h2 {
+            color: #764ba2;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .welcome-screen p {
+            color: #666;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        /* Component Explorer */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .component-card {
+            background: white;
+            border-radius: 15px;
+            padding: 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .component-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+        }
+
+        .component-header {
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .component-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .component-body {
+            padding: 25px;
+        }
+
+        .component-features {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .component-features li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .component-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #f5576c;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        /* Use Cases Section */
+        .use-cases {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .use-case-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .use-case-tab {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+
+        .use-case-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .use-case-content {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .use-case-content.active {
+            display: block;
+        }
+
+        .use-case-demo {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            margin: 10px;
+            display: inline-block;
+            min-width: 150px;
+            transform: scale(0);
+            animation: popIn 0.5s ease-out forwards;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metric-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Tech Stack Section */
+        .tech-stack {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .tech-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .tech-category {
+            text-align: center;
+        }
+
+        .tech-category h4 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .tech-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .tech-item {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            transition: transform 0.3s ease;
+        }
+
+        .tech-item:hover {
+            transform: scale(1.1);
+        }
+
+        /* Quiz Section */
+        .quiz-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .quiz-question {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .quiz-option {
+            padding: 20px;
+            background: #f8f9fa;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .quiz-option:hover {
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct {
+            background: #e8f5e9;
+            border-color: #4CAF50;
+        }
+
+        .quiz-option.incorrect {
+            background: #ffebee;
+            border-color: #f44336;
+        }
+
+        .quiz-feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .quiz-feedback.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .quiz-feedback.incorrect {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popIn {
+            to {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .floating-help {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .floating-help:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .component-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tech-categories {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Health Operating System Explorer</h1>
+            <p>Your Interactive Journey to Understanding HOS Technology</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar">0%</div>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div class="main-content active" id="section-welcome">
+            <div class="welcome-screen">
+                <h2>Welcome, Country Launcher! 🚀</h2>
+                <p>Ready to discover how the Health Operating System can transform healthcare in your country? This interactive explorer will help you understand our technology, see real examples, and prepare you for conversations with ministries.</p>
+                <p style="color: #764ba2; font-weight: bold;">⏱️ Journey Time: 10-15 minutes</p>
+                <button class="btn" onclick="nextSection()">Start Your Journey</button>
+                <button class="btn btn-secondary" onclick="showSection('section-quiz')">Quick Knowledge Check</button>
+            </div>
+        </div>
+
+        <!-- Component Explorer -->
+        <div class="main-content" id="section-components">
+            <h2 style="color: white; text-align: center; margin-bottom: 30px;">The Three Pillars of HOS</h2>
+            <div class="component-grid">
+                <div class="component-card" onclick="exploreComponent('intelligence')">
+                    <div class="component-header">
+                        <span class="component-icon">🧠</span>
+                        <h3>Health Intelligence Centers</h3>
+                        <span class="badge">Tier 1-3</span>
+                    </div>
+                    <div class="component-body">
+                        <p>Real-time decision-making hub embedded within the Ministry of Health</p>
+                        <ul class="component-features">
+                            <li>Live dashboards & control rooms</li>
+                            <li>Data from all health facilities</li>
+                            <li>AI-powered insights</li>
+                            <li>Predictive analytics</li>
+                            <li>1-2 months for basic setup</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="component-card" onclick="exploreComponent('facilities')">
+                    <div class="component-header">
+                        <span class="component-icon">🏥</span>
+                        <h3>Connected Facilities</h3>
+                        <span class="badge">Transform</span>
+                    </div>
+                    <div class="component-body">
+                        <p>Digitally optimized clinics and hospitals generating real-time data</p>
+                        <ul class="component-features">
+                            <li>Digital tools for clinics</li>
+                            <li>EMR & inventory systems</li>
+                            <li>Tablets & training provided</li>
+                            <li>Works without existing EMR</li>
+                            <li>Phased rollout approach</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="component-card" onclick="exploreComponent('capability')">
+                    <div class="component-header">
+                        <span class="component-icon">🎓</span>
+                        <h3>Capability Building</h3>
+                        <span class="badge">6000+ HCWs</span>
+                    </div>
+                    <div class="component-body">
+                        <p>Structured training & support for sustainable operations</p>
+                        <ul class="component-features">
+                            <li>Data literacy training</li>
+                            <li>Digital skills development</li>
+                            <li>Local trainer programs</li>
+                            <li>Ongoing mentorship</li>
+                            <li>Certification pathways</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn" onclick="nextSection()">Explore Use Cases →</button>
+            </div>
+        </div>
+
+        <!-- Use Cases Section -->
+        <div class="main-content" id="section-usecases">
+            <div class="use-cases">
+                <h2 style="color: #764ba2; text-align: center;">What Can You Actually Do With HOS?</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 30px;">Click each use case to see it in action</p>
+                
+                <div class="use-case-tabs">
+                    <button class="use-case-tab active" onclick="showUseCase('maternal')">Maternal Health</button>
+                    <button class="use-case-tab" onclick="showUseCase('supply')">Supply Chain</button>
+                    <button class="use-case-tab" onclick="showUseCase('emergency')">Emergency Response</button>
+                    <button class="use-case-tab" onclick="showUseCase('workforce')">Workforce Planning</button>
+                    <button class="use-case-tab" onclick="showUseCase('referral')">Referral Networks</button>
+                </div>
+
+                <div class="use-case-content active" id="usecase-maternal">
+                    <h3>Maternal & Neonatal Health Tracking</h3>
+                    <p>Real-time monitoring of high-risk pregnancies and maternal mortality indicators</p>
+                    <div class="use-case-demo">
+                        <h4>Live Dashboard Example:</h4>
+                        <div style="text-align: center;">
+                            <div class="metric-card" style="animation-delay: 0.1s;">
+                                <div class="metric-value">247</div>
+                                <div class="metric-label">Active Pregnancies</div>
+                            </div>
+                            <div class="metric-card" style="animation-delay: 0.2s;">
+                                <div class="metric-value">18</div>
+                                <div class="metric-label">High Risk Cases</div>
+                            </div>
+                            <div class="metric-card" style="animation-delay: 0.3s;">
+                                <div class="metric-value">92%</div>
+                                <div class="metric-label">ANC Coverage</div>
+                            </div>
+                            <div class="metric-card" style="animation-delay: 0.4s;">
+                                <div class="metric-value">3</div>
+                                <div class="metric-label">Alerts Today</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="use-case-content" id="usecase-supply">
+                    <h3>Supply Chain Optimization</h3>
+                    <p>Prevent stockouts and reduce waste with predictive inventory management</p>
+                    <div class="use-case-demo">
+                        <h4>Stock Level Monitoring:</h4>
+                        <div style="text-align: center;">
+                            <div class="metric-card" style="animation-delay: 0.1s;">
+                                <div class="metric-value">7</div>
+                                <div class="metric-label">Low Stock Alerts</div>
+                            </div>
+                            <div class="metric-card" style="animation-delay: 0.2s;">
+                                <div class="metric-value">₹2.3M</div>
+                                <div class="metric-label">Saved from Waste</div>
+                            </div>
+                            <div class="metric-card" style="animation-delay: 0.3s;">
+                                <div class="metric-value">14</div>
+                                <div class="metric-label">Days to Reorder</div>
+                            </div>
+                            <div class="metric-card" style="animation-delay: 0.4s;">
+                                <div class="metric-value">98%</div>
+                                <div class="metric-label">Availability Rate</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="use-case-content" id="usecase-emergency">
+                    <h3>Emergency Response Optimization</h3>
+                    <p>Coordinate resources and track patient flow during emergencies</p>
+                    <div class="use-case-demo">
+                        <h4>Emergency Dashboard:</h4>
+                        <div style="text-align: center;">
+                            <div class="metric-card" style="animation-delay: 0.1s;">
+                                <div class="metric-value">12</div>
+                                <div class="metric-label">Active Cases</div>
+                            </div>
+                            <div class="metric-card" style="animation-delay: 0.2s;">
+                                <div class="metric-value">8min</div>
+                                <div class="metric-label">Avg Response</div>
+                            </div>
+                            <div class="metric-card" style="animation-delay: 0.3s;">
+                                <div class="metric-value">24</div>
+                                <div class="metric-label">Available Beds</div>
+                            </div>
+                            <div class="metric-card" style="animation-delay: 0.4s;">
+                                <div class="metric-value">5</div>
+                                <div class="metric-label">Ambulances Ready</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="use-case-content" id="usecase-workforce">
+                    <h3>Health Workforce Planning</h3>
+                    <p>Optimize staff allocation and identify training needs</p>
+                    <div class="use-case-demo">
+                        <h4>Workforce Analytics:</h4>
+                        <div style="text-align: center;">
+                            <div class="metric-card" style="animation-delay: 0.1s;">
+                                <div class="metric-value">1,247</div>
+                                <div class="metric-label">Total HCWs</div>
+                            </div>
+                            <div class="metric-card" style="animation-delay: 0.2s;">
+                                <div class="metric-value">23</div>
+                                <div class="metric-label">Understaffed Units</div>
+                            </div>
+                            <div class="metric-card" style="animation-delay: 0.3s;">
+                                <div class="metric-value">156</div>
+                                <div class="metric-label">In Training</div>
+                            </div>
+                            <div class="metric-card" style="animation-delay: 0.4s;">
+                                <div class="metric-value">87%</div>
+                                <div class="metric-label">Utilization Rate</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="use-case-content" id="usecase-referral">
+                    <h3>Referral Network Analysis</h3>
+                    <p>Track patient journeys and optimize referral pathways</p>
+                    <div class="use-case-demo">
+                        <h4>Referral Tracking:</h4>
+                        <div style="text-align: center;">
+                            <div class="metric-card" style="animation-delay: 0.1s;">
+                                <div class="metric-value">342</div>
+                                <div class="metric-label">Monthly Referrals</div>
+                            </div>
+                            <div class="metric-card" style="animation-delay: 0.2s;">
+                                <div class="metric-value">2.3d</div>
+                                <div class="metric-label">Avg Wait Time</div>
+                            </div>
+                            <div class="metric-card" style="animation-delay: 0.3s;">
+                                <div class="metric-value">78%</div>
+                                <div class="metric-label">Completion Rate</div>
+                            </div>
+                            <div class="metric-card" style="animation-delay: 0.4s;">
+                                <div class="metric-value">15</div>
+                                <div class="metric-label">Delayed Cases</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="nextSection()">See the Technology →</button>
+            </div>
+        </div>
+
+        <!-- Tech Stack Section -->
+        <div class="main-content" id="section-tech">
+            <div class="tech-stack">
+                <h2 style="color: #764ba2; text-align: center;">The Technology Behind HOS</h2>
+                <p style="text-align: center; color: #666;">Enterprise-grade, proven technologies</p>
+                
+                <div class="tech-categories">
+                    <div class="tech-category">
+                        <h4>🗄️ Data Platform</h4>
+                        <div class="tech-items">
+                            <span class="tech-item">Apache Spark</span>
+                            <span class="tech-item">PostgreSQL</span>
+                            <span class="tech-item">MinIO Storage</span>
+                            <span class="tech-item">Data Lake</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <h4>☁️ Infrastructure</h4>
+                        <div class="tech-items">
+                            <span class="tech-item">AWS/Azure</span>
+                            <span class="tech-item">On-Premises</span>
+                            <span class="tech-item">Kubernetes</span>
+                            <span class="tech-item">Docker</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <h4>📊 Analytics & BI</h4>
+                        <div class="tech-items">
+                            <span class="tech-item">Superset</span>
+                            <span class="tech-item">Streamlit</span>
+                            <span class="tech-item">Pandas</span>
+                            <span class="tech-item">Python</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <h4>🔐 Security</h4>
+                        <div class="tech-items">
+                            <span class="tech-item">HIPAA Compliant</span>
+                            <span class="tech-item">ISO 27001</span>
+                            <span class="tech-item">Encryption</span>
+                            <span class="tech-item">RBAC</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <h4>🔌 Integrations</h4>
+                        <div class="tech-items">
+                            <span class="tech-item">DHIS2</span>
+                            <span class="tech-item">OpenMRS</span>
+                            <span class="tech-item">REST APIs</span>
+                            <span class="tech-item">FHIR</span>
+                        </div>
+                    </div>
+                    
+                    <div class="tech-category">
+                        <h4>🚀 Deployment</h4>
+                        <div class="tech-items">
+                            <span class="tech-item">GitOps</span>
+                            <span class="tech-item">CI/CD</span>
+                            <span class="tech-item">IaC</span>
+                            <span class="tech-item">Monitoring</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 40px; padding: 25px; background: #f8f9fa; border-radius: 15px;">
+                    <h3 style="color: #764ba2; margin-bottom: 15px;">🎯 Key Technical Advantages</h3>
+                    <ul style="color: #555; line-height: 1.8;">
+                        <li><strong>Modular Architecture:</strong> Start small, scale as needed</li>
+                        <li><strong>Data Sovereignty:</strong> Your data stays in your country</li>
+                        <li><strong>Open Standards:</strong> No vendor lock-in, uses industry standards</li>
+                        <li><strong>Cost Optimized:</strong> 40% lower TCO than traditional solutions</li>
+                        <li><strong>Future Ready:</strong> AI/ML capabilities built-in</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn" onclick="nextSection()">Test Your Knowledge →</button>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="main-content" id="section-quiz">
+            <div class="quiz-section">
+                <h2 style="color: #764ba2; text-align: center;">Quick Knowledge Check 🎯</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 30px;">Test your understanding of HOS</p>
+                
+                <div id="quiz-container">
+                    <div class="quiz-question">What is the Health Operating System?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="checkAnswer(this, false)">
+                            A single mobile app for health workers
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, true)">
+                            A comprehensive framework with data platform, facility tools, and capability building
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false)">
+                            Just dashboards for the Ministry of Health
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(this, false)">
+                            Only an EMR system for hospitals
+                        </div>
+                    </div>
+                    <div class="quiz-feedback" id="quiz-feedback"></div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn" onclick="nextQuestion()" style="display: none;" id="nextQuestionBtn">Next Question →</button>
+                    <button class="btn" onclick="completeJourney()" style="display: none;" id="completeBtn">Complete Journey 🎉</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Section -->
+        <div class="main-content" id="section-complete">
+            <div class="welcome-screen">
+                <h2>🎉 Congratulations, You're HOS Ready!</h2>
+                <div style="font-size: 4em; margin: 20px 0;">🏆</div>
+                <p>You now understand the core components, use cases, and technology behind the Health Operating System.</p>
+                
+                <div style="background: #f8f9fa; border-radius: 15px; padding: 25px; margin: 30px 0; text-align: left;">
+                    <h3 style="color: #764ba2; margin-bottom: 15px;">Your Next Steps:</h3>
+                    <ol style="color: #555; line-height: 1.8;">
+                        <li>Schedule meeting with Ministry of ICT/Digital Ministry</li>
+                        <li>Share this explorer with your team</li>
+                        <li>Review the FAQ document for detailed answers</li>
+                        <li>Contact Sand Health technical team for deep-dive sessions</li>
+                    </ol>
+                </div>
+
+                <button class="btn" onclick="downloadResources()">Download Resources 📥</button>
+                <button class="btn btn-secondary" onclick="restartJourney()">Explore Again</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="floating-help" onclick="showHelp()">
+        💬
+    </div>
+
+    <script>
+        let currentSection = 0;
+        const sections = ['section-welcome', 'section-components', 'section-usecases', 'section-tech', 'section-quiz', 'section-complete'];
+        let quizScore = 0;
+        let currentQuestionIndex = 0;
+
+        const quizQuestions = [
+            {
+                question: "What is the Health Operating System?",
+                options: [
+                    { text: "A single mobile app for health workers", correct: false },
+                    { text: "A comprehensive framework with data platform, facility tools, and capability building", correct: true },
+                    { text: "Just dashboards for the Ministry of Health", correct: false },
+                    { text: "Only an EMR system for hospitals", correct: false }
+                ],
+                feedback: {
+                    correct: "Excellent! HOS is indeed a comprehensive framework combining all three components.",
+                    incorrect: "Not quite. HOS is more comprehensive - it includes data platforms, facility tools, AND capability building."
+                }
+            },
+            {
+                question: "How quickly can you see initial results with HOS?",
+                options: [
+                    { text: "6-12 months minimum", correct: false },
+                    { text: "1-2 months for Tier 1 features", correct: true },
+                    { text: "2-3 years", correct: false },
+                    { text: "Immediately upon signing", correct: false }
+                ],
+                feedback: {
+                    correct: "That's right! Tier 1 features like basic dashboards can be deployed in just 1-2 months.",
+                    incorrect: "Actually, you can see initial results much faster! Tier 1 features deploy in just 1-2 months."
+                }
+            },
+            {
+                question: "Where can HOS data be hosted?",
+                options: [
+                    { text: "Only in Sand's cloud", correct: false },
+                    { text: "Only in your national data center", correct: false },
+                    { text: "On-premises, private cloud, or public cloud based on your needs", correct: true },
+                    { text: "Only on personal computers", correct: false }
+                ],
+                feedback: {
+                    correct: "Perfect! HOS offers flexible deployment options to meet your sovereignty requirements.",
+                    incorrect: "HOS is more flexible - it can be deployed on-premises, in private cloud, or public cloud."
+                }
+            }
+        ];
+
+        function updateProgress() {
+            const progress = Math.round((currentSection / (sections.length - 1)) * 100);
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = progress + '%';
+            progressBar.textContent = progress + '%';
+        }
+
+        function showSection(sectionId) {
+            sections.forEach(id => {
+                document.getElementById(id).classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            currentSection = sections.indexOf(sectionId);
+            updateProgress();
+        }
+
+        function nextSection() {
+            if (currentSection < sections.length - 1) {
+                currentSection++;
+                showSection(sections[currentSection]);
+            }
+        }
+
+        function showUseCase(useCaseId) {
+            // Hide all use cases
+            document.querySelectorAll('.use-case-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.use-case-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected use case
+            document.getElementById('usecase-' + useCaseId).classList.add('active');
+            event.target.classList.add('active');
+
+            // Reset and replay animations for metric cards
+            const metrics = document.querySelectorAll('#usecase-' + useCaseId + ' .metric-card');
+            metrics.forEach((card, index) => {
+                card.style.animation = 'none';
+                setTimeout(() => {
+                    card.style.animation = `popIn 0.5s ease-out forwards`;
+                    card.style.animationDelay = `${(index + 1) * 0.1}s`;
+                }, 10);
+            });
+        }
+
+        function exploreComponent(component) {
+            alert(`Deep dive into ${component} coming soon! For now, this would open detailed documentation and case studies.`);
+        }
+
+        function checkAnswer(element, isCorrect) {
+            // Clear previous selections
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.classList.remove('correct', 'incorrect');
+            });
+
+            // Mark the selected answer
+            element.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+            // Show feedback
+            const feedback = document.getElementById('quiz-feedback');
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            feedback.className = 'quiz-feedback show ' + (isCorrect ? 'correct' : 'incorrect');
+            feedback.innerHTML = `
+                <strong>${isCorrect ? '✓ Correct!' : '✗ Not quite right'}</strong><br>
+                ${isCorrect ? currentQuestion.feedback.correct : currentQuestion.feedback.incorrect}
+            `;
+
+            if (isCorrect) {
+                quizScore++;
+            }
+
+            // Show next button
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+                document.getElementById('nextQuestionBtn').style.display = 'inline-block';
+            } else {
+                document.getElementById('completeBtn').style.display = 'inline-block';
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizQuestions.length) {
+                const question = quizQuestions[currentQuestionIndex];
+                const container = document.getElementById('quiz-container');
+                
+                container.innerHTML = `
+                    <div class="quiz-question">${question.question}</div>
+                    <div class="quiz-options">
+                        ${question.options.map((option, index) => `
+                            <div class="quiz-option" onclick="checkAnswer(this, ${option.correct})">
+                                ${option.text}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="quiz-feedback" id="quiz-feedback"></div>
+                `;
+                
+                document.getElementById('nextQuestionBtn').style.display = 'none';
+            }
+        }
+
+        function completeJourney() {
+            showSection('section-complete');
+        }
+
+        function restartJourney() {
+            currentSection = 0;
+            currentQuestionIndex = 0;
+            quizScore = 0;
+            showSection('section-welcome');
+        }
+
+        function downloadResources() {
+            alert('Resources package downloading...\n\n• HOS Technical Overview PDF\n• FAQ Document\n• Ministry Presentation Deck\n• Implementation Timeline\n• Contact Information');
+        }
+
+        function showHelp() {
+            alert('Need help?\n\n📧 Email: hos-support@sandhealth.org\n📱 WhatsApp: +XX XXX XXXX\n📚 Docs: docs.sandhealth.org\n\nYour Sand Health technical team is ready to support you!');
+        }
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>

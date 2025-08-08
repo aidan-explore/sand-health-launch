@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Tools & Explorers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card p {
+            color: #718096;
+            margin-bottom: 1.5rem;
+        }
+
+        .card .icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .card .arrow {
+            color: #667eea;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            margin-top: 2rem;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+        }
+
+        .coming-soon {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .coming-soon .card {
+            background: #f7fafc;
+        }
+
+        .badge {
+            background: #e53e3e;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Healthcare Tools & Explorers</h1>
+            <p>A collection of interactive tools and explorers for healthcare domain modeling and analysis</p>
+        </header>
+
+        <main class="cards-grid">
+            <a href="healthcare-domain-model-explorer.html" class="card">
+                <h2>
+                    <span class="icon">HD</span>
+                    Healthcare Domain Model Explorer
+                </h2>
+                <p>Interactive exploration tool for healthcare domain models. Visualize and analyze healthcare data structures, relationships, and domain concepts.</p>
+                <span class="arrow">→</span>
+            </a>
+
+            <a href="hos-explorer.html" class="card">
+                <h2>
+                    <span class="icon">HOS</span>
+                    HOS Explorer
+                </h2>
+                <p>Specialized explorer for HOS (Healthcare Operations System) data and workflows. Navigate through healthcare operational models and processes.</p>
+                <span class="arrow">→</span>
+            </a>
+
+            <div class="card coming-soon">
+                <h2>
+                    <span class="icon">+</span>
+                    More Tools Coming Soon
+                    <span class="badge">Soon</span>
+                </h2>
+                <p>Additional healthcare tools and explorers are in development. Check back regularly for new additions to the collection.</p>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Built with ❤️ for the healthcare community</p>
+            <p><a href="https://github.com/sand-aidan/sand-health-launch.github.io" target="_blank">View on GitHub</a></p>
+        </footer>
+    </div>
+</body>
+</html> 
