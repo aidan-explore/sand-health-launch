@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI for Health: A Ministry Blueprint</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Savanna Health Tech -->
+    <!-- Application Structure Plan: A thematic, non-linear dashboard structure is used to transform the dense report into an engaging, decision-making tool for policymakers. The flow starts with a high-level vision and allows users to dive into specific areas (Strategy, Blueprint, Ecosystem, Roadmap) via a sticky navigation. This is more effective than a linear document as it allows busy officials to quickly access the sections most relevant to them. Key report frameworks are converted into interactive visualizations (charts, diagrams) to make complex information digestible and to support strategic planning. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Public Health ROI -> Goal: Inform -> Viz: Donut Chart -> Interaction: Hover -> Justification: Breaks down the core value proposition into easily understood parts. (Chart.js)
+        - Report Info: Ministerial Domains & Prioritization Matrix -> Goal: Compare/Decide -> Viz: Interactive Scatter Plot -> Interaction: Click points for details -> Justification: Transforms a static table into the app's central interactive decision-support tool. (Chart.js)
+        - Report Info: AI Capability Stack -> Goal: Organize/Explain -> Viz: Interactive Accordion Diagram -> Interaction: Click to expand -> Justification: Simplifies a complex architectural concept. (HTML/CSS/JS)
+        - Report Info: Connected Ecosystem -> Goal: Show Relationships -> Viz: Interactive Network Diagram -> Interaction: Click nodes -> Justification: Visually demonstrates the 'Health in All Policies' concept. (HTML/CSS/JS)
+        - Report Info: Phased Roadmap -> Goal: Show Change Over Time -> Viz: Interactive Timeline -> Interaction: Click phases -> Justification: Clearly presents the implementation plan sequentially. (HTML/CSS/JS)
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #333;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #1E40AF; /* A deep blue for accent */
+            border-bottom-color: #1E40AF;
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .section {
+            scroll-margin-top: 80px;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .matrix-chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 500px;
+        }
+        @media (min-width: 768px) {
+            .matrix-chart-container {
+                height: 500px;
+            }
+        }
+        .tab-button.active {
+            background-color: #2563EB;
+            color: white;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background-color: #D1D5DB;
+        }
+        .timeline-item .dot {
+            position: absolute;
+            left: -27px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #F8F7F4;
+            border: 3px solid #D1D5DB;
+            transition: background-color 0.3s ease;
+        }
+        .timeline-item.active .dot {
+            background-color: #2563EB;
+            border-color: #2563EB;
+        }
+        .ecosystem-node {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .ecosystem-node:hover, .ecosystem-node.active {
+            transform: scale(1.1);
+            filter: drop-shadow(0 4px 8px rgba(30, 64, 175, 0.4));
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header id="header" class="bg-white/80 backdrop-blur-md shadow-sm fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-gray-800">AI for Health Blueprint</h1>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a data-target="vision" class="nav-link text-gray-600 font-medium border-b-2 border-transparent pb-1">The Vision</a>
+                    <a data-target="strategy" class="nav-link text-gray-600 font-medium border-b-2 border-transparent pb-1">The Strategy</a>
+                    <a data-target="blueprint" class="nav-link text-gray-600 font-medium border-b-2 border-transparent pb-1">The Blueprint</a>
+                    <a data-target="ecosystem" class="nav-link text-gray-600 font-medium border-b-2 border-transparent pb-1">The Ecosystem</a>
+                    <a data-target="roadmap" class="nav-link text-gray-600 font-medium border-b-2 border-transparent pb-1">The Roadmap</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-20">
+        <section id="hero" class="bg-white py-20 lg:py-32">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight">
+                    Rewiring the National Health Enterprise with AI
+                </h2>
+                <p class="mt-6 max-w-3xl mx-auto text-lg md:text-xl text-gray-600">
+                    A strategic blueprint for African Ministries of Health to move from reactive care to a proactive, predictive, and citizen-centric system of population health management.
+                </p>
+                <div class="mt-10">
+                    <a href="#vision" class="inline-block bg-blue-600 text-white font-semibold px-8 py-4 rounded-lg shadow-lg hover:bg-blue-700 transition-colors duration-300">
+                        Explore the Blueprint
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="vision" class="section py-16 sm:py-24 bg-gray-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">The Vision: Why AI?</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">This section outlines the shift from a system that reacts to sickness to one that proactively fosters health. Explore the four core principles of the AI-enabled health enterprise and understand how we redefine "Return on Investment" in public health terms.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+                    <div class="card bg-white p-6 rounded-lg shadow">
+                        <h3 class="font-semibold text-lg text-blue-800">Predictive Health</h3>
+                        <p class="mt-2 text-gray-600">Leverage AI to anticipate needs, from forecasting disease outbreaks to planning workforce requirements before they become crises.</p>
+                    </div>
+                    <div class="card bg-white p-6 rounded-lg shadow">
+                        <h3 class="font-semibold text-lg text-blue-800">Personalized Public Health</h3>
+                        <p class="mt-2 text-gray-600">Move beyond one-size-fits-all campaigns to deliver tailored health information and advice directly to citizens via mobile channels.</p>
+                    </div>
+                    <div class="card bg-white p-6 rounded-lg shadow">
+                        <h3 class="font-semibold text-lg text-blue-800">Participatory Health</h3>
+                        <p class="mt-2 text-gray-600">Empower citizens to be active participants in their own health journey with user-friendly digital tools and accessible information.</p>
+                    </div>
+                    <div class="card bg-white p-6 rounded-lg shadow">
+                        <h3 class="font-semibold text-lg text-blue-800">Pre-emptive Health</h3>
+                        <p class="mt-2 text-gray-600">Shift from managing emergencies to preventing them, from predicting medicine stockouts to enabling early diagnosis by community health workers.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg p-8 mt-12">
+                    <h3 class="text-2xl font-bold text-center text-gray-900">The Public Health Return on Investment (PH-ROI)</h3>
+                    <p class="text-center mt-2 text-gray-600 max-w-3xl mx-auto">Success is not measured in profit, but in lives saved, equity enhanced, and resilience built. Hover over the chart segments to explore the four dimensions of value.</p>
+                    <div class="chart-container mt-8">
+                        <canvas id="phRoiChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="strategy" class="section py-16 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">The Strategy: Where to Start?</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">This section introduces a disciplined, domain-driven approach to transformation. The interactive matrix below is a decision-making tool to help ministry leadership prioritize initiatives based on their potential impact and implementation feasibility. Click on a point in the chart to see details.</p>
+                </div>
+                <div class="bg-gray-50 rounded-lg shadow-lg p-8">
+                    <h3 class="text-2xl font-bold text-center text-gray-900">Impact & Feasibility Matrix</h3>
+                    <p class="text-center mt-2 text-gray-600 max-w-3xl mx-auto">Prioritize domains for transformation to ensure early wins and build momentum.</p>
+                    <div class="matrix-chart-container mt-8">
+                        <canvas id="impactFeasibilityMatrix"></canvas>
+                    </div>
+                    <div id="matrix-details" class="mt-8 p-6 bg-white rounded-lg border border-gray-200 shadow-inner hidden">
+                        <h4 id="details-title" class="font-bold text-xl text-blue-900"></h4>
+                        <p class="mt-2"><strong class="text-gray-700">Challenge:</strong> <span id="details-challenge"></span></p>
+                        <p class="mt-2"><strong class="text-gray-700">AI Intervention:</strong> <span id="details-intervention"></span></p>
+                        <p class="mt-2"><strong class="text-gray-700">Expected Value:</strong> <span id="details-value"></span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="blueprint" class="section py-16 sm:py-24 bg-gray-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">The Blueprint: How to Build It?</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">A successful AI transformation requires a cohesive architecture. This section details the four interdependent layers of the National Health AI Capability Stack. Click each layer to expand and learn about its components and purpose.</p>
+                </div>
+                <div class="max-w-4xl mx-auto">
+                    <div class="space-y-4">
+                        <div class="accordion-item bg-white rounded-lg shadow">
+                            <button class="accordion-header w-full flex justify-between items-center p-6 text-left">
+                                <span class="text-xl font-semibold text-blue-900">Layer 1: Citizen & Provider Engagement</span>
+                                <span class="accordion-icon text-2xl font-light text-blue-700">+</span>
+                            </button>
+                            <div class="accordion-content px-6 pb-6">
+                                <p class="text-gray-700">The "front end" of the health system. It includes AI-enabled tools for citizens (chatbots, reminders), Community Health Workers (mobile diagnostics), and clinicians (automated EMRs, diagnostic assistants) to make healthcare more accessible and efficient at every touchpoint.</p>
+                            </div>
+                        </div>
+                        <div class="accordion-item bg-white rounded-lg shadow">
+                            <button class="accordion-header w-full flex justify-between items-center p-6 text-left">
+                                <span class="text-xl font-semibold text-blue-900">Layer 2: AI-Powered National Health Intelligence</span>
+                                <span class="accordion-icon text-2xl font-light text-blue-700">+</span>
+                            </button>
+                            <div class="accordion-content px-6 pb-6">
+                                <p class="text-gray-700">The "brain" of the system. This central engine processes population-level data to generate insights, optimize resource allocation, and orchestrate complex health workflows, such as automatically triggering an outbreak response based on predictive models.</p>
+                            </div>
+                        </div>
+                        <div class="accordion-item bg-white rounded-lg shadow">
+                            <button class="accordion-header w-full flex justify-between items-center p-6 text-left">
+                                <span class="text-xl font-semibold text-blue-900">Layer 3: Foundational Tech & Data Infrastructure</span>
+                                <span class="accordion-icon text-2xl font-light text-blue-700">+</span>
+                            </button>
+                            <div class="accordion-content px-6 pb-6">
+                                <p class="text-gray-700">The bedrock of the entire enterprise. This layer is centered on a comprehensive National Health Data Governance Framework that ensures data privacy, security, and interoperability. It also includes the core technical infrastructure like cloud computing and connectivity solutions.</p>
+                            </div>
+                        </div>
+                        <div class="accordion-item bg-white rounded-lg shadow">
+                            <button class="accordion-header w-full flex justify-between items-center p-6 text-left">
+                                <span class="text-xl font-semibold text-blue-900">Layer 4: A Fit-for-Purpose Operating Model</span>
+                                <span class="accordion-icon text-2xl font-light text-blue-700">+</span>
+                            </button>
+                            <div class="accordion-content px-6 pb-6">
+                                <p class="text-gray-700">The human dimension. This layer involves adapting the Ministry's structure (e.g., creating an AI Transformation Unit), building talent (data science, informatics), and fostering a culture of data-driven decision-making through sustained change management.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ecosystem" class="section py-16 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">The Connected Ecosystem: Who to Work With?</h2>
+                    <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-600">Health is influenced by factors beyond the Ministry's direct control. A successful strategy requires a 'Health in All Policies' approach, integrating data and coordinating actions with other ministries and private partners. Click on the nodes to learn more about each collaboration.</p>
+                </div>
+                <div class="relative max-w-4xl mx-auto h-[500px] flex items-center justify-center">
+                    <div id="moh-node" class="ecosystem-node active absolute z-10 bg-blue-600 text-white rounded-full w-40 h-40 flex items-center justify-center text-center font-bold p-4 shadow-2xl">Ministry of Health</div>
+                    <div id="finance-node" class="ecosystem-node absolute bg-green-500 text-white rounded-full w-32 h-32 flex items-center justify-center text-center font-semibold p-2 shadow-lg" style="top: 0; left: 45%;">Finance & Planning</div>
+                    <div id="agri-node" class="ecosystem-node absolute bg-yellow-500 text-white rounded-full w-32 h-32 flex items-center justify-center text-center font-semibold p-2 shadow-lg" style="top: 30%; right: 0;">Agriculture & Environment</div>
+                    <div id="edu-node" class="ecosystem-node absolute bg-purple-500 text-white rounded-full w-32 h-32 flex items-center justify-center text-center font-semibold p-2 shadow-lg" style="bottom: 0; right: 20%;">Education</div>
+                    <div id="infra-node" class="ecosystem-node absolute bg-red-500 text-white rounded-full w-32 h-32 flex items-center justify-center text-center font-semibold p-2 shadow-lg" style="bottom: 0; left: 20%;">Infrastructure & Transport</div>
+                    <div id="ppp-node" class="ecosystem-node absolute bg-gray-700 text-white rounded-full w-32 h-32 flex items-center justify-center text-center font-semibold p-2 shadow-lg" style="top: 30%; left: 0;">Public-Private Partners</div>
+                </div>
+                <div id="ecosystem-details" class="mt-12 p-6 bg-gray-50 rounded-lg border border-gray-200 shadow-inner min-h-[120px]">
+                    <h4 id="eco-title" class="font-bold text-xl text-blue-900">Ministry of Health</h4>
+                    <p id="eco-text" class="mt-2 text-gray-700">Acts as the central orchestrator of the national health innovation ecosystem, leading the AI transformation and coordinating with all partners to improve population health outcomes.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="roadmap" class="section py-16 sm:py-24 bg-gray-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">The Roadmap: When to Act?</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-lg text-gray-600">This section outlines a pragmatic, phased roadmap for implementation. This approach de-risks the investment and delivers tangible value at each stage. Click the tabs to explore each phase of the national transformation.</p>
+                </div>
+
+                <div class="max-w-5xl mx-auto">
+                    <div class="mb-8 border-b border-gray-200">
+                        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                            <button data-phase="1" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 active">Phase 1 (Yrs 1-2)</button>
+                            <button data-phase="2" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Phase 2 (Yrs 3-5)</button>
+                            <button data-phase="3" class="tab-button whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Phase 3 (Yrs 6+)</button>
+                        </nav>
+                    </div>
+
+                    <div id="roadmap-content">
+                        <!-- Content will be injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white">
+        <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+            <p>&copy; 2025 Ministry of Health AI Transformation Initiative.</p>
+            <p class="text-sm text-gray-400 mt-2">This interactive blueprint is based on the report "Extracting Public Health Value from AI: A Blueprint for Rewiring the National Health Enterprise".</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const header = document.getElementById('header');
+
+            function updateActiveLink() {
+                let index = sections.length;
+                while(--index && window.scrollY + header.offsetHeight < sections[index].offsetTop) {}
+                
+                navLinks.forEach((link) => link.classList.remove('active'));
+                const activeLink = document.querySelector(`.nav-link[data-target="${sections[index].id}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('data-target');
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        window.scrollTo({
+                            top: targetSection.offsetTop - header.offsetHeight,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+
+            const phRoiData = {
+                labels: ['Improved Health Outcomes', 'Enhanced Equity', 'System Efficiency & Resilience', 'Workforce Empowerment'],
+                datasets: [{
+                    label: 'PH-ROI Components',
+                    data: [40, 25, 20, 15],
+                    backgroundColor: [
+                        'rgba(37, 99, 235, 0.8)',
+                        'rgba(29, 78, 216, 0.8)',
+                        'rgba(30, 64, 175, 0.8)',
+                        'rgba(30, 58, 138, 0.8)'
+                    ],
+                    borderColor: '#F8F7F4',
+                    borderWidth: 4,
+                    hoverOffset: 8
+                }]
+            };
+
+            const phRoiConfig = {
+                type: 'doughnut',
+                data: phRoiData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#333',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed;
+                                    const descriptions = {
+                                        'Improved Health Outcomes': 'Reduced mortality, increased life expectancy.',
+                                        'Enhanced Equity': 'Closing the gap in access to quality care.',
+                                        'System Efficiency & Resilience': 'Cost savings, optimized resources, emergency readiness.',
+                                        'Workforce Empowerment': 'Increased productivity, capacity, and job satisfaction.'
+                                    };
+                                    return [label, descriptions[label]];
+                                }
+                            },
+                            backgroundColor: '#333',
+                            titleFont: { size: 16 },
+                            bodyFont: { size: 12 },
+                            padding: 10,
+                            displayColors: false
+                        }
+                    }
+                }
+            };
+
+            const phRoiChartCtx = document.getElementById('phRoiChart').getContext('2d');
+            new Chart(phRoiChartCtx, phRoiConfig);
+
+            const matrixData = {
+                datasets: [{
+                    label: 'Quick Wins',
+                    data: [
+                        { x: 8, y: 9, domain: 'National Health Supply Chain' },
+                        { x: 7, y: 8, domain: 'Primary Healthcare (Rural Ops)' },
+                    ],
+                    backgroundColor: 'rgba(22, 163, 74, 0.7)',
+                    pointRadius: 10,
+                    pointHoverRadius: 15,
+                }, {
+                    label: 'Strategic Imperatives',
+                    data: [
+                        { x: 4, y: 9, domain: 'Integrated Disease Surveillance' },
+                        { x: 3, y: 7, domain: 'Health Workforce Management' }
+                    ],
+                    backgroundColor: 'rgba(219, 39, 119, 0.7)',
+                    pointRadius: 10,
+                    pointHoverRadius: 15,
+                }, {
+                    label: 'Opportunistic Improvements',
+                    data: [{ x: 9, y: 4, domain: 'Health Promotion & Education' }],
+                    backgroundColor: 'rgba(245, 158, 11, 0.7)',
+                    pointRadius: 10,
+                    pointHoverRadius: 15,
+                }, {
+                    label: 'Re-evaluate / Defer',
+                    data: [{ x: 3, y: 3, domain: 'Health Infrastructure Management' }],
+                    backgroundColor: 'rgba(107, 114, 128, 0.7)',
+                    pointRadius: 10,
+                    pointHoverRadius: 15,
+                }]
+            };
+
+            const domainDetails = {
+                'National Health Supply Chain': {
+                    challenge: 'Pervasive stockouts of essential medicines at the "last mile" and significant wastage.',
+                    intervention: 'AI-driven demand forecasting, dynamic inventory management, and route optimization for delivery.',
+                    value: 'Increased availability of medicines, drastic reduction in wastage, and lower logistics costs.'
+                },
+                'Primary Healthcare (Rural Ops)': {
+                    challenge: 'Severe shortage of doctors in rural areas, forcing CHWs to handle complex cases with limited support.',
+                    intervention: 'AI-driven diagnostic tools on mobile devices for CHWs and clinical decision support systems.',
+                    value: 'Improved diagnostic accuracy, empowerment of CHWs, and earlier treatment initiation.'
+                },
+                'Integrated Disease Surveillance': {
+                    challenge: 'Delayed detection of outbreaks due to manual, paper-based reporting from remote clinics.',
+                    intervention: 'AI-powered predictive analytics integrating clinical, climate, and mobility data to forecast hotspots.',
+                    value: 'Faster, more targeted outbreak response, reducing morbidity and mortality from epidemics.'
+                },
+                'Health Workforce Management': {
+                    challenge: 'Inequitable distribution of health workers, high rates of burnout, and inefficient planning.',
+                    intervention: 'AI models to predict staffing needs, sentiment analysis to identify burnout risks, and optimization for deployment.',
+                    value: 'More equitable workforce distribution, improved staff retention, and proactive HR planning.'
+                },
+                'Health Promotion & Education': {
+                    challenge: 'One-size-fits-all campaigns with limited reach and impact.',
+                    intervention: 'AI-powered chatbots and personalized SMS/WhatsApp campaigns for targeted health messaging.',
+                    value: 'Increased engagement and relevance of health promotion efforts.'
+                },
+                'Health Infrastructure Management': {
+                    challenge: 'Inefficient planning and maintenance of health facilities and equipment.',
+                    intervention: 'Predictive maintenance models for critical equipment and optimization for new facility placement.',
+                    value: 'Improved uptime of critical equipment and more strategic infrastructure investment.'
+                }
+            };
+            
+            const matrixConfig = {
+                type: 'scatter',
+                data: matrixData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    onClick: (evt, elements) => {
+                        if (elements.length > 0) {
+                            const element = elements[0];
+                            const dataset = matrixData.datasets[element.datasetIndex];
+                            const point = dataset.data[element.index];
+                            const details = domainDetails[point.domain];
+
+                            document.getElementById('details-title').textContent = point.domain;
+                            document.getElementById('details-challenge').textContent = details.challenge;
+                            document.getElementById('details-intervention').textContent = details.intervention;
+                            document.getElementById('details-value').textContent = details.value;
+                            document.getElementById('matrix-details').classList.remove('hidden');
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                            title: {
+                                display: true,
+                                text: 'Implementation Feasibility →',
+                                font: { size: 16, weight: 'bold' },
+                                color: '#333'
+                            },
+                            min: 0,
+                            max: 10
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Public Health Impact →',
+                                font: { size: 16, weight: 'bold' },
+                                color: '#333'
+                            },
+                            min: 0,
+                            max: 10
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw.domain;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            
+            const matrixChartCtx = document.getElementById('impactFeasibilityMatrix').getContext('2d');
+            new Chart(matrixChartCtx, matrixConfig);
+
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('.accordion-icon');
+                    const isOpen = content.style.maxHeight;
+
+                    document.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
+                    document.querySelectorAll('.accordion-icon').forEach(i => i.textContent = '+');
+
+                    if (!isOpen) {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        icon.textContent = '-';
+                    }
+                });
+            });
+
+            const ecosystemNodes = document.querySelectorAll('.ecosystem-node');
+            const ecoTitle = document.getElementById('eco-title');
+            const ecoText = document.getElementById('eco-text');
+            const ecosystemDetailsData = {
+                'moh-node': { title: 'Ministry of Health', text: 'Acts as the central orchestrator of the national health innovation ecosystem, leading the AI transformation and coordinating with all partners to improve population health outcomes.' },
+                'finance-node': { title: 'Ministry of Finance & Planning', text: 'Integrates health and economic data to model the impact of health interventions on workforce productivity, viewing health spending as a strategic investment.' },
+                'agri-node': { title: 'Ministry of Agriculture & Environment', text: 'Fuses meteorological, agricultural, and health data to forecast malnutrition spikes or the spread of vector-borne diseases like malaria.' },
+                'edu-node': { title: 'Ministry of Education', text: 'Links health and education datasets to monitor school-based health programs, track immunizations, and identify health issues impacting learning.' },
+                'infra-node': { title: 'Ministry of Infrastructure & Transport', text: 'Provides anonymized mobility data during emergencies to predict disease spread and help position resources effectively.' },
+                'ppp-node': { title: 'Public-Private Partners', text: 'Collaborates through regulatory sandboxes and co-creation initiatives to build localized, unbiased AI solutions and accelerate innovation.' }
+            };
+
+            ecosystemNodes.forEach(node => {
+                node.addEventListener('click', () => {
+                    ecosystemNodes.forEach(n => n.classList.remove('active'));
+                    node.classList.add('active');
+                    const details = ecosystemDetailsData[node.id];
+                    ecoTitle.textContent = details.title;
+                    ecoText.textContent = details.text;
+                });
+            });
+
+            const roadmapTabs = document.querySelectorAll('.tab-button');
+            const roadmapContent = document.getElementById('roadmap-content');
+            const roadmapData = {
+                '1': {
+                    title: 'Phase 1: Foundational Readiness & Pilot Transformation (Years 1–2)',
+                    content: `The objective is to establish essential governance and data foundations while executing a high-impact pilot to demonstrate value.
+                    <ul class="list-disc list-inside mt-4 space-y-2 text-gray-700">
+                        <li><strong>Governance:</strong> Establish the central AI Health Transformation Unit and the inter-ministerial National Health Data Council.</li>
+                        <li><strong>Policy:</strong> Develop and legislate the National Health Data Governance Framework. This is the critical path activity.</li>
+                        <li><strong>Pilot:</strong> Select one "Quick Win" domain (e.g., National Immunization Program) for an end-to-end transformation pilot.</li>
+                        <li><strong>Capacity Building:</strong> Launch intensive training and change management for all staff within the pilot domain.</li>
+                    </ul>`
+                },
+                '2': {
+                    title: 'Phase 2: Scaling and Capability Industrialization (Years 3–5)',
+                    content: `Building on Phase 1 learnings, this phase expands the transformation and industrializes the AI capability stack for repeatable deployments.
+                    <ul class="list-disc list-inside mt-4 space-y-2 text-gray-700">
+                        <li><strong>Domain Expansion:</strong> Initiate transformations in 3-5 additional high-priority domains.</li>
+                        <li><strong>Industrialization:</strong> Shift from bespoke solutions to creating a platform of reusable AI services (e.g., a national "Radiology AI Service").</li>
+                        <li><strong>Talent Scaling:</strong> Expand talent development programs to a national scale, working with universities to build a domestic workforce.</li>
+                    </ul>`
+                },
+                '3': {
+                    title: 'Phase 3: Enterprise-Wide Intelligence (Years 6+)',
+                    content: `The final phase represents the maturation of the transformation, where the Ministry operates as a fully "rewired," data-driven, and intelligent health enterprise.
+                    <ul class="list-disc list-inside mt-4 space-y-2 text-gray-700">
+                        <li><strong>Full-Scale Operation:</strong> The majority of core domains are now AI-enabled and integrated. The National Health Intelligence layer is fully operational.</li>
+                        <li><strong>Culture Shift:</strong> A culture of data-driven decision-making is embedded in daily workflows at all levels.</li>
+                        <li><strong>Systemic Resilience:</strong> The health system demonstrates a new level of resilience, capable of anticipating and responding to public health shocks with agility.</li>
+                    </ul>`
+                }
+            };
+
+            function updateRoadmapContent(phase) {
+                const data = roadmapData[phase];
+                roadmapContent.innerHTML = `
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-bold text-gray-900">${data.title}</h3>
+                        <div class="mt-4 text-lg text-gray-600">${data.content}</div>
+                    </div>
+                `;
+            }
+
+            roadmapTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    roadmapTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    updateRoadmapContent(tab.dataset.phase);
+                });
+            });
+            
+            updateRoadmapContent('1');
+        });
+    </script>
+</body>
+</html>
