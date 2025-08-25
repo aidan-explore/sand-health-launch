@@ -1,0 +1,182 @@
+<div class="section">
+    <h2>Team Interaction Model</h2>
+    
+    <h3>Rwanda Teams → Central Teams</h3>
+    <div class="interaction-grid">
+        <div class="interaction-card">
+            <h4>National HIC → Sand Intelligence</h4>
+            <span class="interaction-type provides">PROVIDES</span>
+            <ul class="interaction-list">
+                <li>• User feedback and feature requests</li>
+                <li>• Performance metrics and usage data</li>
+                <li>• Best practices for other countries</li>
+            </ul>
+            <span class="interaction-type requires">REQUIRES</span>
+            <ul class="interaction-list">
+                <li>• Platform updates and bug fixes</li>
+                <li>• Technical support and training</li>
+                <li>• New feature development</li>
+            </ul>
+        </div>
+        
+        <div class="interaction-card">
+            <h4>RMS → Healthcare Platform</h4>
+            <span class="interaction-type provides">PROVIDES</span>
+            <ul class="interaction-list">
+                <li>• Supply chain integration requirements</li>
+                <li>• Inventory management patterns</li>
+                <li>• API usage feedback</li>
+            </ul>
+            <span class="interaction-type requires">REQUIRES</span>
+            <ul class="interaction-list">
+                <li>• Stable APIs and infrastructure</li>
+                <li>• Data storage and analytics</li>
+                <li>• Integration support</li>
+            </ul>
+        </div>
+        
+        <div class="interaction-card">
+            <h4>Umuko → Country Expansion</h4>
+            <span class="interaction-type provides">PROVIDES</span>
+            <ul class="interaction-list">
+                <li>• Training curriculum templates</li>
+                <li>• AI tutor conversation data</li>
+                <li>• Engagement best practices</li>
+            </ul>
+            <span class="interaction-type requires">REQUIRES</span>
+            <ul class="interaction-list">
+                <li>• Localization support</li>
+                <li>• Multi-country deployment guides</li>
+                <li>• Cross-country learning forums</li>
+            </ul>
+        </div>
+    </div>
+    
+    <h3>Expansion Teams ↔ Central Teams</h3>
+    <div class="interaction-grid">
+        <div class="interaction-card">
+            <h4>Togo → All Central Teams</h4>
+            <span class="interaction-type collaborates">COLLABORATES</span>
+            <ul class="interaction-list">
+                <li>• Weekly sync on platform deployment</li>
+                <li>• Joint troubleshooting sessions</li>
+                <li>• Feature prioritization meetings</li>
+                <li>• Performance optimization sprints</li>
+            </ul>
+        </div>
+        
+        <div class="interaction-card">
+            <h4>Sierra Leone → Country Expansion</h4>
+            <span class="interaction-type collaborates">COLLABORATES</span>
+            <ul class="interaction-list">
+                <li>• Launch playbook refinement</li>
+                <li>• MoU template adaptation</li>
+                <li>• Budget model validation</li>
+                <li>• Team hiring coordination</li>
+            </ul>
+        </div>
+        
+        <div class="interaction-card">
+            <h4>New Countries → Rwanda Teams</h4>
+            <span class="interaction-type requires">REQUIRES</span>
+            <ul class="interaction-list">
+                <li>• Site visits and demonstrations</li>
+                <li>• Lessons learned documentation</li>
+                <li>• Peer mentoring and support</li>
+                <li>• Success story evidence</li>
+            </ul>
+        </div>
+    </div>
+    
+    <h3>Critical Dependencies</h3>
+    <div class="sync-matrix">
+        <div class="sync-item">
+            <h5>🔄 Daily Sync</h5>
+            <p>Platform teams on production issues</p>
+        </div>
+        <div class="sync-item">
+            <h5>📅 Weekly Sync</h5>
+            <p>Country teams on progress</p>
+        </div>
+        <div class="sync-item">
+            <h5>📊 Bi-weekly Sync</h5>
+            <p>Cross-country learning</p>
+        </div>
+        <div class="sync-item">
+            <h5>🎯 Monthly Sync</h5>
+            <p>Portfolio review with leadership</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .interaction-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+    
+    .interaction-card {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 20px;
+        position: relative;
+    }
+    
+    .interaction-card h4 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-size: 1.1em;
+    }
+    
+    .interaction-type {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 5px;
+        font-size: 0.75em;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    
+    .provides { background: #d5f4e6; color: #27ae60; }
+    .requires { background: #fadbd8; color: #e74c3c; }
+    .collaborates { background: #fdebd0; color: #f39c12; }
+    
+    .interaction-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .interaction-list li {
+        padding: 5px 0;
+        color: #5a6c7d;
+        font-size: 0.95em;
+    }
+    
+    .sync-matrix {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin: 20px 0;
+    }
+    
+    .sync-item {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+    }
+    
+    .sync-item h5 {
+        color: #2c3e50;
+        margin-bottom: 8px;
+        font-size: 1em;
+    }
+    
+    .sync-item p {
+        color: #5a6c7d;
+        font-size: 0.9em;
+    }
+</style> 
